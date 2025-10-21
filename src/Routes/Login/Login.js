@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../Context/AuthContext";
 
-function Login({handleLogin}) {
+function Login() {
+    const { handleLogin } = useContext(AuthContext);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
