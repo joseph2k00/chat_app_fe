@@ -18,5 +18,64 @@
             "password": "alicepwd",
             "token": 3
         }
+    ],
+    "user_conversations": [
+        {
+            "conversation_id": 2,
+            "conversation_type": "GROUP",
+            "conversation_name": "B99 Squad",
+            "last_message": {
+                "last_message_username": "alice",
+                "message_type": "INBOUND",
+                "message": "I'm good, How are you?"
+            },
+            "messages": [
+                {
+                    "message_id": 1,
+                    "message_type": "OUTBOUND",
+                    "is_reply": false,
+                    "reply_message_id": null,
+                    "message": "Hi, How are you?"
+                },
+                {
+                    "message_id": 2,
+                    "message_type": "INBOUND",
+                    "user": {
+                        "username": "alice",
+                        "user_id": 101
+                    },
+                    "is_reply": true,
+                    "reply_message_id": 1,
+                    "message": "I'm good, How are you?"
+                }
+            ]
+        },
+        {
+            "conversation_id": 2,
+            "conversation_type": "PERSONAL",
+            "conversation_name": "Cellu",
+            "user_id": 110,
+            "last_message": {
+                "last_message_username": "Cellu",
+                "message_type": "INBOUND",
+                "message": "I'm good, How are you?"
+            },
+            "messages": [
+                {
+                    "message_id": 3,
+                    "message_type": "OUTBOUND",
+                    "is_reply": false,
+                    "reply_message_id": null,
+                    "message": "Hi, How are you?"
+                },
+                {
+                    "message_id": 4,
+                    "message_type": "INBOUND",
+                    "is_reply": true,
+                    "reply_message_id": 3,
+                    "message": "I'm good, How are you?"
+                }
+            ]
+        }
     ]
 }
