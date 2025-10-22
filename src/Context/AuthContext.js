@@ -1,5 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import Users from "../dataset/users.json";
+import { Navigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
@@ -38,4 +39,20 @@ export const AuthProvider = ({ children }) => {
             {children}
         </AuthContext.Provider>
     );
+};
+
+export const AuthenticatedRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    return user ? 
+        (children) :
+        (<Navigate to="/login" />)
+};
+
+export const PublicRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    return !user ? 
+        (children) :
+        (<Navigate to="/" />)
 };

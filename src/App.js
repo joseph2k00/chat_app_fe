@@ -3,7 +3,7 @@ import ChatApp from "./Routes/ChatApp/ChatApp";
 import Login from "./Routes/Login/Login";
 import Signup from "./Routes/Signup/Signup";
 import { Routes, Route, Link, BrowserRouter } from "react-router-dom";
-import { AuthContext } from './Context/AuthContext';
+import { AuthContext, AuthenticatedRoute, PublicRoute } from './Context/AuthContext';
 import { useContext } from 'react';
 
 function App() {
@@ -19,11 +19,12 @@ function App() {
       </nav>
       <Routes>
         {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
 
         {/* Protected Routes */}
-        <Route path="/" element={<ChatApp />} />
+        <Route path="/" element={<AuthenticatedRoute><ChatApp /></AuthenticatedRoute>} />
+        
       </Routes>
     </BrowserRouter>
   );
