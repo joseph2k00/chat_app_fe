@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Users from "../../../../dataset/users.json";
 
-export const ChatList = () => {
+export const ChatList = ({ handleChatSelect }) => {
     const [chatList, setChatList] = useState([]);
 
     useEffect(() => {
@@ -13,7 +13,7 @@ export const ChatList = () => {
         <>
             { 
                 chatList.map((data, index) => (
-                    <div>
+                    <div key={data.conversation_id} onClick={ () => { handleChatSelect(data.conversation_id) } }>
                         <b>{ data.conversation_name }</b>
                         <p>
                             { 
