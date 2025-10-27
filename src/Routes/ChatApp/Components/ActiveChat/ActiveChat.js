@@ -3,6 +3,7 @@ import Users from "../../../../dataset/users.json";
 
 export const ActiveChat = ({ activeChatID }) => {
     const [chat, setChat] = useState(null);
+    const [chatTextBox, setChatTextBox] = useState("");
 
     useEffect(() => {
         const conversation = activeChatID ?
@@ -10,6 +11,28 @@ export const ActiveChat = ({ activeChatID }) => {
             null;
         setChat(conversation);
     }, [activeChatID]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const newMessage = {
+            message_id: 5,
+            message_type: "OUTBOUND",
+            user: { username: "You", user_id: 101 },
+            is_reply: false,
+            reply_message_id: null,
+            message: chatTextBox
+        };
+
+        setChat(prev => ({
+            ...prev,
+            messages: [...prev.messages, newMessage],
+            last_message: {
+                "last_message_username": "You",
+                "message_type": "OUTBOUND",
+                "message": chatTextBox
+            }
+        }));
+    };
 
     if (!activeChatID) {
         return <p>Please select a chat</p>;
@@ -29,6 +52,10 @@ export const ActiveChat = ({ activeChatID }) => {
                     </li>
                 ))}
             </ul>
+            <form onSubmit={handleSubmit}>
+                <input type="text" onChange={ (e) => setChatTextBox(e.target.value) }></input>
+                <button type="submit">Send</button>
+            </form>
         </>
     ): 
     (
