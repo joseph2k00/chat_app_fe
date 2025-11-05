@@ -1,7 +1,8 @@
-import { useContext, useState } from "react";
+import { ActiveChat } from "./Components/ActiveChat/ActiveChat";
 import { AuthContext } from "../../Context/AuthContext";
 import { ChatList } from "./Components/ChatList/ChatList";
-import { ActiveChat } from "./Components/ActiveChat/ActiveChat";
+import { ChatSearch } from "./Components/ChatSearch/ChatSearch";
+import { useContext, useState } from "react";
 
 function ChatApp() {
     const { user } = useContext(AuthContext);
@@ -15,6 +16,8 @@ function ChatApp() {
         <>
             <h1>Welcome to the Chat Application, {user.username}!</h1>
             <div>
+                <ChatSearch />
+                <hr />
                 <ChatList handleChatSelect={handleChatSelect} />
                 <hr />
                 <ActiveChat activeChatID={currentCoversationId} />
