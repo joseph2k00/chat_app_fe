@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_URLS } from "../../../../ApiRoutes/APIRoutes";
 
-export const ChatSearch = () => {
+export const ChatSearch = ({ handleTempChatSelect }) => {
 
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -25,11 +25,17 @@ export const ChatSearch = () => {
             );
 
             const data = await response.json();
+            console.log(data);
             setSearchResults(data);
         }
 
         initiateSearch();
     }, [searchText]);
+
+
+    const handleStartChat = (userId) => {
+        handleTempChatSelect(userId);
+    }
 
     return (
         <>
@@ -37,7 +43,8 @@ export const ChatSearch = () => {
             <input type="text" onChange={(e) => setSearchText(e.target.value)} />
 
             {searchResults?.data && searchResults.data.map((element, index) => (
-                <div key={index}>
+                <div key={index} onClick={ () => handleStartChat(element.id) }>
+                {/* <div key={index}> */}
                     {element.name}
                 </div>
             ))}

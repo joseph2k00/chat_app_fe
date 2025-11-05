@@ -3,5 +3,9 @@ export const API_URLS = {
     LOGIN: '/login',
     LOGOUT: '/logout',
     PROFILE: '/profile',
-    SEARCH_USER: '/search-users'
+    SEARCH_USER: '/search-users',
+    GET_CONVERSATIONS: '/conversations',
+    GET_CONVERSATION_DETAILS: '/conversation/',
+    CREATE_CONVERSATION: '/create-conversation',
+    SEND_MESSAGE: '/conversation/send-message'
 };
