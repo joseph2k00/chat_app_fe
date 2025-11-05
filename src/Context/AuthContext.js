@@ -1,37 +1,133 @@
-import { createContext, useContext, useState } from "react";
-import Users from "../dataset/users.json";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { API_URLS } from "../ApiRoutes/APIRoutes";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(() => {
-        const savedUser = localStorage.getItem("user");
-        return savedUser ? JSON.parse(savedUser) : null;
-    });
+    const getCurrentUserProfile = async () => {
+        if (localStorage.getItem('user_token'))
+        {
+            const response = await fetch(
+                process.env.REACT_APP_API_URL + API_URLS.PROFILE,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("user_token")
+                    }
+                }
+            );
 
-    const handleLogin = (userData) => {
-        if (Users.users.find((user) => user.username === userData.username && user.password === userData.password)) {
-        setUser(userData);
-        localStorage.setItem("user", JSON.stringify(userData));
-        } else {
-        alert("Invalid username or password");
+            const profileData = await response.json();
+
+            return {
+                username: profileData.name,
+                email: profileData.email
+            }
+        }
+        return null;
+    };
+
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const loadUser = async () => {
+            const profile = await getCurrentUserProfile();
+            setUser(profile);
+        };
+        loadUser();
+    }, []);
+
+    const handleLogin = async (userData) => {
+        const res = await fetch(
+            process.env.REACT_APP_API_URL + API_URLS.LOGIN,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: userData.email,
+                    password: userData.password,
+                })
+            }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok || data.status === "error") {
+            return {
+                status: false,
+                message: "Something went wrong"
+            };
+        }
+
+        localStorage.setItem("user_token", data.token);
+
+        const currentUser = await getCurrentUserProfile();
+        setUser(currentUser);
+
+        return {
+            status: true
         }
     };
 
-    const handleSignup = (userData) => {
-        if (Users.users.find((user) => user.username === userData.username)) {      
-        alert("Username already exists");
-        } else {
-        userData.id = userData.token = Users.users[Users.users.length - 1].id + 1;
-        Users.users.push(userData);
-        alert("User registered successfully. Please login.");
-        }
+    const handleSignup = async (userData) => {
+            try {
+                const res = await fetch(
+                    process.env.REACT_APP_API_URL + API_URLS.REGISTER,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            email: userData.email,
+                            password: userData.password,
+                            name: userData.username,
+                        })
+                    }
+                );
+
+                const data = await res.json();
+
+                if (!res.ok || data.status === "error") {
+                    return {
+                        status: false,
+                        message: "Something went wrong"
+                    };
+                }
+
+                localStorage.setItem("user_token", data.token);
+
+                const currentUser = getCurrentUserProfile();
+                setUser(currentUser);
+
+                return {
+                    status: true
+                }
+            } catch (error) {
+                return {
+                    status: false,
+                    message: "Something went wrong"
+                }
+            }
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         setUser(null);
-        localStorage.removeItem("user");
+        localStorage.removeItem("user_token");
+        await fetch(
+            process.env.REACT_APP_API_URL + API_URLS.LOGOUT,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("user_token")
+                }
+            }
+        );
     };
 
     return (
