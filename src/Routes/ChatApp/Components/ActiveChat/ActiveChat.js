@@ -1,48 +1,49 @@
 import { useEffect, useState } from "react";
 import { API_URLS } from "../../../../ApiRoutes/APIRoutes";
-import { echo } from "./../../../../realtime/Echo"; 
+import { echo } from "./../../../../realtime/Echo";
+
+const loadChat = async (activeChatID, setChat) => {
+    if (activeChatID !== null) {
+        const response = await fetch(
+            process.env.REACT_APP_API_URL + API_URLS.GET_CONVERSATION_DETAILS + activeChatID,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("user_token")
+                }
+            }
+        );
+
+        const data = await response.json();
+        setChat(data);
+    } else {
+        setChat(null);
+    }
+}
 
 export const ActiveChat = ({ activeChatID, tempChatUserId }) => {
     const [chat, setChat] = useState(null);
     const [chatTextBox, setChatTextBox] = useState("");
-
+    
     useEffect(() => {
-        const loadChat = async () => {
-            if (activeChatID !== null)
-            {
-                const response = await fetch(
-                    process.env.REACT_APP_API_URL + API_URLS.GET_CONVERSATION_DETAILS + activeChatID,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer " + localStorage.getItem("user_token")
-                        }
-                    }
-                );
-
-                const data = await response.json();
-                setChat(data);
-                console.log(data);
-            }
+        loadChat(activeChatID, setChat);
+        if (activeChatID) {
+            const channel = echo.private(`message.received.${activeChatID}`);
+            channel.listen('.message.received', (e) => {
+                console.log(e);
+                loadChat(activeChatID, setChat);
+            });
+            return () => {
+                echo.leave(`private-message.received.${activeChatID}`);
+            };
         }
-
-        loadChat();
     }, [activeChatID]);
 
-    useEffect(() => {
-        console.log(1);
-        const channel = echo.private('test.ws');
-        channel.listen('.test.done', (e) => {
-            console.log('Payload:', e);
-        });
-        return () => {
-            echo.leave('private-test.ws');
-        };
-    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setChatTextBox('');
         const newMessage = {message: chatTextBox};
 
         if (!tempChatUserId) {
@@ -93,7 +94,7 @@ export const ActiveChat = ({ activeChatID, tempChatUserId }) => {
                 ))}
             </ul>
             <form onSubmit={handleSubmit}>
-                <input type="text" onChange={ (e) => setChatTextBox(e.target.value) }></input>
+                <input type="text" onChange={ (e) => setChatTextBox(e.target.value) } value={chatTextBox}></input>
                 <button type="submit">Send</button>
             </form>
         </>
