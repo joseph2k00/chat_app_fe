@@ -9,11 +9,11 @@ function Login() {
     const [screenError, setScreenError] = useState(null);
 
     const navigate = useNavigate();
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const userData = { email: email, password: password };
         
-        const response = handleLogin(userData);
+        const response = await handleLogin(userData);
 
         if (response.status)
         {

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { API_URLS } from "../ApiRoutes/APIRoutes";
+import { echo } from "../realtime/Echo";
 
 export const AuthContext = createContext();
 
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         localStorage.setItem("user_token", data.token);
-
+        echo.options.auth.headers.Authorization = `Bearer ${localStorage.getItem('user_token')}`;
         const currentUser = await getCurrentUserProfile();
         setUser(currentUser);
 
@@ -101,8 +102,9 @@ export const AuthProvider = ({ children }) => {
                 }
 
                 localStorage.setItem("user_token", data.token);
-
-                const currentUser = getCurrentUserProfile();
+                echo.options.auth.headers.Authorization = `Bearer ${localStorage.getItem('user_token')}`;
+                
+                const currentUser = await getCurrentUserProfile();
                 setUser(currentUser);
 
                 return {
