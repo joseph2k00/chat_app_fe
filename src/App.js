@@ -6,6 +6,7 @@ import { Routes, Route, Link, BrowserRouter } from "react-router-dom";
 import { AuthContext, AuthenticatedRoute, PublicRoute } from './Context/AuthContext';
 import { useContext } from 'react';
 
+
 function App() {
   const { user, handleLogout } = useContext(AuthContext);
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { API_URLS } from "../../../../ApiRoutes/APIRoutes";
+import { echo } from "./../../../../realtime/Echo"; 
 
 export const ActiveChat = ({ activeChatID, tempChatUserId }) => {
     const [chat, setChat] = useState(null);
@@ -28,6 +29,17 @@ export const ActiveChat = ({ activeChatID, tempChatUserId }) => {
 
         loadChat();
     }, [activeChatID]);
+
+    useEffect(() => {
+        console.log(1);
+        const channel = echo.private('test.ws');
+        channel.listen('.test.done', (e) => {
+            console.log('Payload:', e);
+        });
+        return () => {
+            echo.leave('private-test.ws');
+        };
+    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
