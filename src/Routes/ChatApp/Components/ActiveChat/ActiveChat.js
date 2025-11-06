@@ -22,7 +22,7 @@ const loadChat = async (activeChatID, setChat) => {
     }
 }
 
-export const ActiveChat = ({ activeChatID, tempChatUserId }) => {
+export const ActiveChat = ({ activeChatID, tempChatUserId, handleChatSelect }) => {
     const [chat, setChat] = useState(null);
     const [chatTextBox, setChatTextBox] = useState("");
     
@@ -31,7 +31,6 @@ export const ActiveChat = ({ activeChatID, tempChatUserId }) => {
         if (activeChatID) {
             const channel = echo.private(`message.received.${activeChatID}`);
             channel.listen('.message.received', (e) => {
-                console.log(e);
                 loadChat(activeChatID, setChat);
             });
             return () => {
@@ -61,7 +60,7 @@ export const ActiveChat = ({ activeChatID, tempChatUserId }) => {
             );
         } else {
             newMessage.other_user_id = tempChatUserId;
-            await fetch(
+            const res = await fetch(
                 process.env.REACT_APP_API_URL + API_URLS.CREATE_CONVERSATION,
                 {
                     method: "POST",
@@ -72,6 +71,8 @@ export const ActiveChat = ({ activeChatID, tempChatUserId }) => {
                     body: JSON.stringify(newMessage)
                 }
             );
+            const data = await res.json();
+            handleChatSelect(data.conversation_id);
         }
     };
 
@@ -100,7 +101,7 @@ export const ActiveChat = ({ activeChatID, tempChatUserId }) => {
         </>
     ): tempChatUserId ? (
         <>
-            <h3>New Chat with Someone</h3>
+            <h3>New Chat</h3>
             <form onSubmit={handleSubmit}>
                 <input type="text" onChange={ (e) => setChatTextBox(e.target.value) }></input>
                 <button type="submit">Send</button>

@@ -29,7 +29,8 @@ function ChatApp() {
                 <hr />
                 <ActiveChat 
                     activeChatID={currentCoversationId}
-                    tempChatUserId={tempChatUserId} />
+                    tempChatUserId={tempChatUserId}
+                    handleChatSelect={handleChatSelect} />
             </div>
         </ >
     );

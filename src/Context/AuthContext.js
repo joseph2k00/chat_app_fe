@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
             const profileData = await response.json();
 
             return {
+                id: profileData.id,
                 username: profileData.name,
                 email: profileData.email
             }
