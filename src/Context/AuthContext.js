@@ -117,8 +117,6 @@ export const AuthProvider = ({ children }) => {
     };
 
     const handleLogout = async () => {
-        setUser(null);
-        localStorage.removeItem("user_token");
         await fetch(
             process.env.REACT_APP_API_URL + API_URLS.LOGOUT,
             {
@@ -129,6 +127,8 @@ export const AuthProvider = ({ children }) => {
                 }
             }
         );
+        setUser(null);
+        localStorage.removeItem("user_token");
     };
 
     return (
