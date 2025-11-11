@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "../../Common/Components/LoadingButton";
 
 function Signup() {
     const { handleSignup } = useContext(AuthContext);
@@ -8,9 +9,11 @@ function Signup() {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [screenError, setScreenError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
     const handleSubmit = (e) => {
+        setIsLoading(true);
         e.preventDefault();
         const userData = { 
             username: username,
@@ -25,6 +28,7 @@ function Signup() {
         }
         else
         {
+            setIsLoading(false);
             setScreenError(response.message ? "An error has occured" : null);
         }
     }
@@ -79,11 +83,7 @@ function Signup() {
                     </div>
                     
                     <div>
-                        <button
-                        type="submit" 
-                        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 font-medium">
-                            Signup
-                        </ button>
+                        <LoadingButton buttonText={ isLoading ? "Signing up..." : "Signin" } isLoading={ isLoading } />
                     </div>
                 </form>
             </div>
