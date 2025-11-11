@@ -39,15 +39,32 @@ export const ChatSearch = ({ handleTempChatSelect }) => {
 
     return (
         <>
-            <h3>Search User</h3>
-            <input type="text" onChange={(e) => setSearchText(e.target.value)} />
+            <div className="max-w-md mx-auto bg-white shadow-md rounded-2xl p-6 mt-10">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">Search User</h3>
 
-            {searchResults?.data && searchResults.data.map((element, index) => (
-                <div key={index} onClick={ () => handleStartChat(element.id) }>
-                {/* <div key={index}> */}
-                    {element.name}
+                <input
+                type="text"
+                placeholder="Type a name..."
+                onChange={(e) => setSearchText(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+
+                <div className="space-y-2">
+                {searchResults?.data && searchResults.data.length > 0 ? (
+                    searchResults.data.map((element, index) => (
+                    <div
+                        key={index}
+                        onClick={() => handleStartChat(element.id)}
+                        className="cursor-pointer px-4 py-2 bg-gray-50 hover:bg-blue-50 rounded-lg border border-gray-200 transition duration-200"
+                    >
+                        <p className="text-gray-700 font-medium">{element.name}</p>
+                    </div>
+                    ))
+                ) : (
+                    <p className="text-gray-500 text-sm text-center">No users found</p>
+                )}
                 </div>
-            ))}
+            </div>
         </>
     );
 };

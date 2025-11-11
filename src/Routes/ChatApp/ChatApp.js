@@ -1,11 +1,9 @@
 import { ActiveChat } from "./Components/ActiveChat/ActiveChat";
-import { AuthContext } from "../../Context/AuthContext";
 import { ChatList } from "./Components/ChatList/ChatList";
 import { ChatSearch } from "./Components/ChatSearch/ChatSearch";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 function ChatApp() {
-    const { user } = useContext(AuthContext);
     const [currentCoversationId, setCurrentConversationId] = useState(null);
     const [tempChatUserId, setTempChatUserId] = useState(null);
 
@@ -21,17 +19,27 @@ function ChatApp() {
 
     return (
         <>
-            <h1>Welcome to the Chat Application, {user.username}!</h1>
-            <div>
-                <ChatSearch handleTempChatSelect={handleTempChatSelect} />
-                <hr />
-                <ChatList handleChatSelect={handleChatSelect} />
-                <hr />
-                <ActiveChat 
+            <div className="flex h-screen bg-gray-100">
+                {/* Left Sidebar */}
+                <div className="w-1/3 max-w-sm bg-white border-r border-gray-200 flex flex-col">
+                    <div className="p-4 border-b border-gray-200">
+                    <ChatSearch handleTempChatSelect={handleTempChatSelect} />
+                    </div>
+                    <div className="flex-1 overflow-y-auto">
+                    <ChatList handleChatSelect={handleChatSelect} />
+                    </div>
+                </div>
+
+                {/* Right Chat Area */}
+                <div className="flex-1 bg-white">
+                    <ActiveChat
                     activeChatID={currentCoversationId}
                     tempChatUserId={tempChatUserId}
-                    handleChatSelect={handleChatSelect} />
+                    handleChatSelect={handleChatSelect}
+                    />
+                </div>
             </div>
+
         </ >
     );
 }

@@ -69,16 +69,29 @@ export const ChatList = ({ handleChatSelect }) => {
 
     return (
         <>
-            { 
-                chatList.map((data, index) => (
-                    <div key={data.id} onClick={ () => { handleChatSelect(data.id) } }>
-                        <b>{ data.conversation_title }</b>
-                        <p> 
-                            <b>{data.latest_message.sender.name}</b>: { data.latest_message.message }
+            <div className="bg-white shadow-md rounded-2xl p-4 max-w-md mx-auto mt-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Chats</h3>
+
+                <div className="space-y-3">
+                {chatList.length > 0 ? (
+                    chatList.map((data) => (
+                    <div
+                        key={data.id}
+                        onClick={() => handleChatSelect(data.id)}
+                        className="cursor-pointer p-3 rounded-xl border border-gray-200 hover:bg-blue-50 transition duration-200"
+                    >
+                        <b className="text-gray-800 block">{data.conversation_title}</b>
+                        <p className="text-gray-600 text-sm truncate">
+                        <span className="font-medium text-gray-700">{data.latest_message.sender.name}</span>:{" "}
+                        {data.latest_message.message}
                         </p>
                     </div>
-                ))
-            }
+                    ))
+                ) : (
+                    <p className="text-gray-500 text-sm text-center">No chats available</p>
+                )}
+                </div>
+            </div>
         </>
     );
 };

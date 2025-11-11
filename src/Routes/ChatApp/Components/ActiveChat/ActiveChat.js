@@ -100,45 +100,114 @@ export const ActiveChat = ({ activeChatID, tempChatUserId, handleChatSelect }) =
     };
 
     if (!activeChatID && !tempChatUserId) {
-        return <p>Please select a chat</p>;
+        return (            
+            <div className="flex items-center justify-center h-full text-gray-500 bg-gray-50">
+                <p className="text-lg font-medium">Please select a chat</p>
+            </div>
+        );
     }
 
     if (!chat && !tempChatUserId) {
-        return <p>Loading chat...</p>;
+        return (
+            <div className="flex flex-col items-center justify-center h-full bg-gray-50">
+                <div className="flex space-x-2 mb-3">
+                <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
+                </div>
+                <p className="text-gray-500 text-lg font-medium">Loading chat...</p>
+            </div>
+        );
     }
 
     return activeChatID ? (
-        <>
-            <h3>{chat.conversation_title ?? "Chat"}</h3>
-            <ul>
-                {chat.messages.map((msg, index) => (
-                    <li key={index}>
-                        <b>{ msg.username }</ b>: { msg.message }
-                        <form onSubmit={handleTranslate}>
-                            <input type="number" value={msg.id} hidden></input>
-                            <input type="text" onChange={ (e) => setLangTextBox(e.target.value) } value={langTextBox}></input>
-                            <button type="submit">Translate</button>
-                        </form>
-                    </li>
-                ))}
-            </ul>
-            <form onSubmit={handleSubmit}>
-                <input type="text" onChange={ (e) => setChatTextBox(e.target.value) } value={chatTextBox}></input>
-                <button type="submit">Send</button>
-            </form>
-        </>
-    ): tempChatUserId ? (
-        <>
-            <h3>New Chat</h3>
-            <form onSubmit={handleSubmit}>
-                <input type="text" onChange={ (e) => setChatTextBox(e.target.value) }></input>
-                <button type="submit">Send</button>
-            </form>
-        </>
-    ) :
-    (
-        <>
-            Please select a chat
-        </>
-    );
+            <>
+                <div className="flex flex-col h-full max-w-2xl mx-auto bg-white shadow-md rounded-2xl overflow-hidden mt-6">
+                    {/* Chat Header */}
+                    <div className="bg-blue-600 text-white px-4 py-3 text-lg font-semibold">
+                        {chat.conversation_title ?? "Chat"}
+                    </div>
+
+                    {/* Chat Messages */}
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+                        {chat.messages.map((msg, index) => (
+                        <div
+                            key={index}
+                            className="bg-white p-3 rounded-xl shadow-sm border border-gray-200"
+                        >
+                            <p className="text-gray-800">
+                            <b className="text-blue-600">{msg.username}</b>: {msg.message}
+                            </p>
+
+                            {/* Translate form */}
+                            <form
+                            onSubmit={handleTranslate}
+                            className="mt-2 flex items-center space-x-2"
+                            >
+                            <input type="number" value={msg.id} hidden />
+                            <input
+                                type="text"
+                                placeholder="Enter language code (e.g. fr)"
+                                onChange={(e) => setLangTextBox(e.target.value)}
+                                value={langTextBox}
+                                className="flex-1 border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            />
+                            <button
+                                type="submit"
+                                className="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition duration-200"
+                            >
+                                Translate
+                            </button>
+                            </form>
+                        </div>
+                        ))}
+                    </div>
+
+                    {/* Send Message Form */}
+                    <form
+                        onSubmit={handleSubmit}
+                        className="flex items-center border-t border-gray-200 p-3 bg-white"
+                    >
+                        <input
+                        type="text"
+                        placeholder="Type your message..."
+                        onChange={(e) => setChatTextBox(e.target.value)}
+                        value={chatTextBox}
+                        className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <button
+                        type="submit"
+                        className="ml-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+                        >
+                        Send
+                        </button>
+                    </form>
+                </div>
+            </>
+        ) : tempChatUserId ? (
+            <>
+                <div className="max-w-2xl mx-auto bg-white shadow-md rounded-2xl p-6 mt-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">New Chat</h3>
+                <form onSubmit={handleSubmit} className="flex items-center space-x-2">
+                    <input
+                    type="text"
+                    placeholder="Type a message..."
+                    onChange={(e) => setChatTextBox(e.target.value)}
+                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <button
+                    type="submit"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+                    >
+                    Send
+                    </button>
+                </form>
+                </div>
+            </>
+        ) : (
+            <div className="text-center text-gray-500 mt-10">
+                Please select a chat
+            </div>
+        );
+
 };
