@@ -7,5 +7,6 @@ export const API_URLS = {
     GET_CONVERSATIONS: '/conversations',
     GET_CONVERSATION_DETAILS: '/conversation/',
     CREATE_CONVERSATION: '/create-conversation',
-    SEND_MESSAGE: '/conversation/send-message'
+    SEND_MESSAGE: '/conversation/send-message',
+    TRANSLATE_MESSAGE: '/translate-message'
 };

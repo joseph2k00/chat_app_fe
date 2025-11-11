@@ -25,6 +25,7 @@ const loadChat = async (activeChatID, setChat) => {
 export const ActiveChat = ({ activeChatID, tempChatUserId, handleChatSelect }) => {
     const [chat, setChat] = useState(null);
     const [chatTextBox, setChatTextBox] = useState("");
+    const [langTextBox, setLangTextBox] = useState("");
     
     useEffect(() => {
         loadChat(activeChatID, setChat);
@@ -39,6 +40,28 @@ export const ActiveChat = ({ activeChatID, tempChatUserId, handleChatSelect }) =
         }
     }, [activeChatID]);
 
+    const handleTranslate = async (e) => {
+        e.preventDefault();
+        console.log(e.target[0].value);
+        const apiBody = {
+            message_id: e.target[0].value,
+            target_language: langTextBox,
+        };
+
+        const res = await fetch(
+            process.env.REACT_APP_API_URL + API_URLS.TRANSLATE_MESSAGE,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("user_token")
+                },
+                body: JSON.stringify(apiBody)
+            }
+        );
+        const data = await res.json();
+        console.log(data);
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -91,6 +114,11 @@ export const ActiveChat = ({ activeChatID, tempChatUserId, handleChatSelect }) =
                 {chat.messages.map((msg, index) => (
                     <li key={index}>
                         <b>{ msg.username }</ b>: { msg.message }
+                        <form onSubmit={handleTranslate}>
+                            <input type="number" value={msg.id} hidden></input>
+                            <input type="text" onChange={ (e) => setLangTextBox(e.target.value) } value={langTextBox}></input>
+                            <button type="submit">Translate</button>
+                        </form>
                     </li>
                 ))}
             </ul>
