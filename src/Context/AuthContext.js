@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { Navigate } from "react-router-dom";
 import { API_URLS } from "../ApiRoutes/APIRoutes";
 import { echo } from "../realtime/Echo";
@@ -9,7 +9,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
 
-    const getCurrentUserProfile = async () => {
+    const getCurrentUserProfile = useCallback(async () => {
         if (localStorage.getItem('user_token'))
         {
             setIsLoading(true);
@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    handleLogout();
+                    await handleLogout();
                 }
                 setIsLoading(false);
                 return null;
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
             }
         }
         return null;
-    };
+    }, []);
 
     const [user, setUser] = useState(null);
 
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
             setUser(profile);
         };
         loadUser();
-    }, []);
+    }, [getCurrentUserProfile]);
 
     const handleLogin = async (userData) => {
         const res = await fetch(
