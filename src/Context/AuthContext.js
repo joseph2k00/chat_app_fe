@@ -2,13 +2,17 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { API_URLS } from "../ApiRoutes/APIRoutes";
 import { echo } from "../realtime/Echo";
+import { LoadingScreen } from "../Common/Components/LoadingScreen";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+    const [isLoading, setIsLoading] = useState(false);
+
     const getCurrentUserProfile = async () => {
         if (localStorage.getItem('user_token'))
         {
+            setIsLoading(true);
             const response = await fetch(
                 process.env.REACT_APP_API_URL + API_URLS.PROFILE,
                 {
@@ -22,6 +26,7 @@ export const AuthProvider = ({ children }) => {
 
             const profileData = await response.json();
 
+            setIsLoading(false);
             return {
                 id: profileData.id,
                 username: profileData.name,
@@ -133,7 +138,9 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("user_token");
     };
 
-    return (
+    return isLoading ? (
+        <LoadingScreen text="Loading..." />
+    ) : (
         <AuthContext.Provider value={{ user, handleLogin, handleSignup, handleLogout }}>
             {children}
         </AuthContext.Provider>
