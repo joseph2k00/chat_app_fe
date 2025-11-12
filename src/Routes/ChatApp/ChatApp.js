@@ -19,7 +19,7 @@ function ChatApp() {
 
     return (
         <>
-            <div className="flex h-screen bg-gray-100">
+            <div className="flex h-19/20 bg-gray-100">
                 {/* Left Sidebar */}
                 <div className="w-1/3 max-w-sm bg-white border-r border-gray-200 flex flex-col">
                     <div className="p-4 border-b border-gray-200">

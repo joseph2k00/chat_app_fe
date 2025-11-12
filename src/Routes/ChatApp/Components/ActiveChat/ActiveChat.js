@@ -116,7 +116,7 @@ export const ActiveChat = ({ activeChatID, tempChatUserId, handleChatSelect }) =
 
     return activeChatID ? (
             <>
-                <div className="flex flex-col h-full max-w-2xl mx-auto bg-white shadow-md rounded-2xl overflow-hidden mt-6">
+                <div className="flex flex-col h-19/20 max-w-2xl mx-auto bg-white shadow-md rounded-2xl overflow-hidden mt-6">
                     {/* Chat Header */}
                     <div className="bg-blue-600 text-white px-4 py-3 text-lg font-semibold">
                         {chat.conversation_title ?? "Chat"}
