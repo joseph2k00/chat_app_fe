@@ -18,12 +18,19 @@ export const AuthProvider = ({ children }) => {
                 {
                     method: "GET",
                     headers: {
-                        "Content-Type": "application/json",
+                        "Accept": "application/json",
                         "Authorization": "Bearer " + localStorage.getItem("user_token")
                     }
                 }
             );
 
+            if (!response.ok) {
+                if (response.status === 401) {
+                    handleLogout();
+                }
+                setIsLoading(false);
+                return null;
+            }
             const profileData = await response.json();
 
             setIsLoading(false);
