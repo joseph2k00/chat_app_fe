@@ -12,7 +12,7 @@ function Signup() {
     const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         setIsLoading(true);
         e.preventDefault();
         const userData = { 
@@ -20,7 +20,7 @@ function Signup() {
             email: email,
             password: password
         };
-        const response = handleSignup(userData);
+        const response = await handleSignup(userData);
 
         if (response.status)
         {
@@ -34,11 +34,15 @@ function Signup() {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center h-19/20 bg-gray-100">
             <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-8">
                 <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Signup</h2>
-                <form onSubmit={handleSubmit}>
-                    { screenError }
+                
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    {screenError && (
+                        <div className="text-red-500 text-sm text-center">{screenError}</div>
+                    )}
+
                     <div>
                         <label 
                             htmlFor="email"
@@ -53,6 +57,7 @@ function Signup() {
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             required />
                     </div>
+
                     <div>
                         <label 
                             htmlFor="username"
@@ -67,6 +72,7 @@ function Signup() {
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             required />
                     </div>
+
                     <div>
                         <label
                             htmlFor="password"
@@ -74,7 +80,7 @@ function Signup() {
                                 Password:
                         </label>
                         <input 
-                            type="text" 
+                            type="password" 
                             id="password" 
                             name="password" 
                             onChange={ (e) => setPassword(e.target.value) }

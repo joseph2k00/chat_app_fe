@@ -12,7 +12,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <nav className="bg-white text-black px-6 py-3 flex items-center justify-between shadow-md">
+      <nav className="bg-white text-black px-6 py-3 flex items-center justify-between shadow-md h-1/20">
         <h1 className="text-lg font-semibold">MyApp</h1>
         <div className="flex items-center space-x-4">
           {!user && (

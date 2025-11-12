@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { API_URLS } from "../../../../ApiRoutes/APIRoutes";
+import { LoadingScreen } from "../../../../Common/Components/LoadingScreen";
 
 export const ChatSearch = ({ handleTempChatSelect }) => {
 
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (searchText === '') {
@@ -12,7 +14,11 @@ export const ChatSearch = ({ handleTempChatSelect }) => {
             return;
         }
 
+        const controller = new AbortController();
+        const { signal } = controller;
+        
         const initiateSearch = async () => {
+            setIsLoading(true);
             const response = await fetch(
                 process.env.REACT_APP_API_URL + API_URLS.SEARCH_USER + "?query=" + encodeURIComponent(searchText),
                 {
@@ -20,16 +26,24 @@ export const ChatSearch = ({ handleTempChatSelect }) => {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": "Bearer " + localStorage.getItem("user_token")
-                    }
+                    },
+                    signal,
                 }
             );
 
             const data = await response.json();
-            console.log(data);
             setSearchResults(data);
+            setIsLoading(false);
         }
 
-        initiateSearch();
+        const debounceTimeout = setTimeout(initiateSearch, 400);
+        
+
+        return () => {
+            clearTimeout(debounceTimeout);
+            controller.abort();
+        };
+
     }, [searchText]);
 
 
@@ -50,6 +64,7 @@ export const ChatSearch = ({ handleTempChatSelect }) => {
                 />
 
                 <div className="space-y-2">
+                { isLoading ? <LoadingScreen text="Searching..."/> : null }
                 {searchResults?.data && searchResults.data.length > 0 ? (
                     searchResults.data.map((element, index) => (
                     <div
@@ -60,9 +75,7 @@ export const ChatSearch = ({ handleTempChatSelect }) => {
                         <p className="text-gray-700 font-medium">{element.name}</p>
                     </div>
                     ))
-                ) : (
-                    <p className="text-gray-500 text-sm text-center">No users found</p>
-                )}
+                ) : (<p className="text-gray-500 text-sm text-center">No users found</p>)}
                 </div>
             </div>
         </>
